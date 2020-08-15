@@ -5,42 +5,41 @@
 <a href="{{ url_for('logout') }}">Logout</a>
 <div class="add-task">
   <h3>Add a new expense:</h3>
-  <table>
-    <tr>
-      <form action="{{ url_for('new_expense') }}" method="post">
-      {{ form.csrf_token }}        
-        <td>
-          <label>Month:</label>
-          <select name="month" width="100px">
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
-          </select>
-        </td>
-        <td>
-          <label>Expense:</label>
-          <input name="name" type="text" width="120px">
-        </td>
-        <td>
-          <label>Amount:</label>
-          <input name="amount" type="text" width="50px">
-          
-        </td>
-        <td>
-          &nbsp;
-          &nbsp;
-          <input class="button" type="submit" value="Save">
-        </td>
-      </form>
-    </tr>
-  </table>
+  <form action="{{ url_for('new_expense') }}" method="post" class="inline-form">
+    {{ form.csrf_token }}
+    <div class="input-group">
+      {{ form.month(placeholder="month") }}
+      {% if form.month.errors %}
+        <div class="error">
+          {% for error in form.month.errors %}
+            {{error}}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="input-group">
+      {{ form.name(placeholder="name") }}
+      {% if form.name.errors %}
+        <div class="error">
+          {% for error in form.name.errors %}
+            {{error}}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="input-group">
+      {{ form.amount(placeholder="amount") }}
+      {% if form.amount.errors %}
+        <div class="error">
+          {% for error in form.amount.errors %}
+            {{error}}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="input-group">
+      <button class="button" type="submit">Submit</button>
+    </div>
 </div>
 <div class="entries">
   <br>
@@ -54,6 +53,7 @@
           <th width="100px"><strong>Month</strong></th>
           <th width="200px"><strong>Expense</strong></th>
           <th width="50px"><strong>Amount</strong></th>
+          <th width="90px"><strong>Posted By</strong></th>
           <th><strong>Actions</strong></th>
         </tr>
       </thead>
@@ -63,6 +63,7 @@
           <td width="100px">{{ expense.month }}</td>
           <td width="200px">{{ expense.name }}</td>
           <td width="50px" style="text-align: right;">{{'%0.2f' % expense.amount|float }}</td>
+          <td width="90px">{{ expense.poster.name }}</td>
           <td>
             <a href="{{ url_for('delete', expense_id = expense.id) }}">Delete</a> -
            
