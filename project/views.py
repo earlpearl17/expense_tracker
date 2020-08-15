@@ -83,12 +83,18 @@ def register():
                 return render_template('register.html', form=form, error=error)
     return render_template('register.html', form=form, error=error)
 
-@app.route('/expenses/')
+@app.route('/expenses/', methods=['GET','POST'])
+#@app.route('/expenses/')
 @login_required
 def expenses():
+    # form=AddExpenseForm()
+    # flash(form.month.data)
+    # flash(form.name.data)
+    # flash(form.amount.data)
     return render_template(
         'expenses.html',
         form=AddExpenseForm(request.form),
+        #form=form,
         open_expenses=open_expenses()
     )    
 
@@ -116,6 +122,46 @@ def new_expense():
         error=error,
         open_expenses=open_expenses()        
     )
+
+#Update Expense Amounts REVISIT
+@app.route('/update/<int:expense_id>/', methods=['GET', 'POST'])
+@login_required
+def update(expense_id):
+    error = None
+    expense = Expense.query.get(expense_id)
+    form = AddExpenseForm(obj=expense)
+    
+    if request.method == 'GET':
+        return render_template(
+            'update.html',
+            form=form,
+            error=error
+    )    
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            expense.month = form.month.data
+            expense.name = form.name.data
+            expense.amount = form.amount.data
+            expense.user_id = session['user_id']
+            db.session.commit()
+            flash('Expense was successfully updated.')
+            return redirect(url_for('expenses'))  
+    
+    return render_template(
+        'update.html',
+        form=form,
+        error=error
+    )
+
+# Delete Expenses
+@app.route('/delete/<int:expense_id>/')
+@login_required
+def delete(expense_id):
+    new_id = expense_id
+    db.session.query(Expense).filter_by(id=new_id).delete()
+    db.session.commit()
+    flash('The expense was successfully deleted.')
+    return redirect(url_for('expenses'))
 
 # # Add new expenses
 # @app.route('/add/', methods=['GET','POST'])
@@ -147,13 +193,35 @@ def new_expense():
 # @app.route('/update/<int:expense_id>/', methods=['GET', 'POST'])
 # @login_required
 # def update(expense_id):
-#     #new_id = expense_id
+#     error = None
 #     expense = Expense.query.get(expense_id)
+#     form = AddExpenseForm(obj=expense)
+#     #flash("Made it to the update function!")
+#     #flash(form.month.data)
 #     if request.method == 'GET':
 #         return render_template(
 #             'update.html',
-#             form = AddExpenseForm(obj=expense)
-#         )   
+#             form=form,
+#             error=error
+#     )    
+#     elif request.method == 'POST':
+#         if form.validate_on_submit():
+#             expense.month = form.month.data
+#             expense.name = form.name.data
+#             expense.amount = form.amount.data
+#             expense.user_id = session['user_id']
+#             db.session.commit()
+#             flash('Expense was successfully updated.')
+#             return redirect(url_for('expenses'))  
+
+    # return render_template(
+    #         'expenses.html',
+    #         form=form,
+    #         error=error
+    # )
+    
+            
+       
     # else:
     #     db.session.merge(expense)    
     #     flash("Expense has been updated.")
@@ -164,18 +232,6 @@ def new_expense():
     #db.session.commit()
     #flash('The expense was updated.')
     #return redirect(url_for('expenses'))
-        
-
-# Delete Expenses
-@app.route('/delete/<int:expense_id>/')
-@login_required
-def delete(expense_id):
-    new_id = expense_id
-    db.session.query(Expense).filter_by(id=new_id).delete()
-    db.session.commit()
-    flash('The expense was successfully deleted.')
-    return redirect(url_for('expenses'))
-
 # #Update Expense Amounts REVISIT
 # @app.route('/update/<int:expense_id>/', methods=['GET', 'POST'])
 # @login_required

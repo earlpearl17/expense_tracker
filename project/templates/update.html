@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+{% block content %}
+
+<h1>Welcome to the Expense Tracker</h1>
+<a href="{{ url_for('logout') }}">Logout</a>
+<div class="add-task">
+  <h3>Update an existing expense:</h3>
+  <form action="{{ url_for('update', expense_id = form.id.data) }}" method="post" class="inline-form">
+    {{ form.csrf_token }}
+    <div class="input-group">
+      {{ form.month(placeholder="month") }}
+      {% if form.month.errors %}
+        <div class="error">
+          {% for error in form.month.errors %}
+            {{error}}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="input-group">
+      {{ form.name(placeholder="name") }}
+      {% if form.name.errors %}
+        <div class="error">
+          {% for error in form.name.errors %}
+            {{error}}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="input-group">
+      {{ form.amount(placeholder="amount") }}
+      {% if form.amount.errors %}
+        <div class="error">
+          {% for error in form.amount.errors %}
+            {{error}}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="input-group">
+      <button class="button" type="submit">Update</button>
+    </div>
+</div>
+
+{% endblock %}
