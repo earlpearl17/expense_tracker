@@ -1,0 +1,51 @@
+{% extends "_base.html" %}
+{% block content %}
+
+<h1>Welcome to the Expense Tracker</h1>
+<a href="{{ url_for('logout') }}">Logout</a>
+<div class="add-task">
+  <h3>Update an expense:</h3>
+  <table>
+      <form action="{{ url_for('update') }}" method="post">
+        {% for field in form %}
+        <tr>
+          <th>{{ field.label }}</th>
+          <td>{{ field }}</td>
+        </tr>
+        {% endfor %}
+
+        <td>
+          <label>Month:</label>
+          <select name="month" width="100px">
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+        </td>
+        <td>
+          <label>Expense:</label>
+          <input name="name" type="text" width="120px">
+        </td>
+        <td>
+          <label>Amount:</label>
+          <input name="amount" type="text" width="50px">
+          
+        </td>
+        <td>
+          &nbsp;
+          &nbsp;
+          <input class="button" type="submit" value="Update">
+        </td>
+      </form>
+    </tr>
+  </table>
+</div>
+
+{% endblock %}
