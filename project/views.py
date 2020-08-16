@@ -38,6 +38,7 @@ def flash_errors(form):
 
 # route handlers
 @app.route('/logout/')
+@login_required
 def logout():
     session.pop('logged_in', None)
     session.pop('user_id', None)
@@ -144,7 +145,7 @@ def update(expense_id):
             expense.amount = form.amount.data
             expense.user_id = session['user_id']
             db.session.commit()
-            flash('Expense was successfully updated.')
+            flash('The expense was successfully updated.')
             return redirect(url_for('expenses'))  
     
     return render_template(
