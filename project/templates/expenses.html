@@ -5,40 +5,40 @@
 <a href="{{ url_for('logout') }}">Logout</a>
 <div class="add-task">
   <h3>Add a new expense:</h3>
-  <form action="{{ url_for('new_expense') }}" method="post" class="inline-form">
+  <form action="{{ url_for('new_expense') }}" method="post">
     {{ form.csrf_token }}
-    <div class="input-group">
+    <div class="form-group">
       {{ form.month(placeholder="month") }}
       {% if form.month.errors %}
-        <div class="error">
+        <span class="error">
           {% for error in form.month.errors %}
             {{error}}
           {% endfor %}
-        </div>
+        </span>
       {% endif %}
     </div>
-    <div class="input-group">
+    <div class="form-group">
       {{ form.name(placeholder="name") }}
       {% if form.name.errors %}
-        <div class="error">
+        <span class="error">
           {% for error in form.name.errors %}
             {{error}}
           {% endfor %}
-        </div>
+        </span>
       {% endif %}
     </div>
-    <div class="input-group">
+    <div class="form-group">
       {{ form.amount(placeholder="amount") }}
       {% if form.amount.errors %}
-        <div class="error">
+        <span class="error">
           {% for error in form.amount.errors %}
             {{error}}
           {% endfor %}
-        </div>
+        </span>
       {% endif %}
     </div>
-    <div class="input-group">
-      <button class="button" type="submit">Submit</button>
+    <div class="form-group">
+      <input class="btn btn-default" type="submit" value="Submit">
     </div>
 </div>
 <div class="entries">
